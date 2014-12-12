@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>GeoJson View</title>
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css">
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <style>
+          * {
+            margin:0;
+            padding:0;
+          }
+
+          html {
+            height: 100%;
+          }
+
+          body {
+            min-height: 100%;
+            width: 100%;
+          }
+
+          #map {
+            width: 100%;
+            min-height: 80vh;
+          }
+
+          textarea {
+            width: 80%;
+            height: 18vh;
+            float: left;
+          }
+
+          button {
+            margin: 10px;
+          }
+
+          .leaflet-container .leaflet-control-mouseposition {
+            background-color: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 0 5px #bbb;
+            padding: 0 5px;
+            margin:0;
+            color: #333;
+            font: 11px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+          }
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+        <textarea id="geojson" placeholder="Paste an Array with GeoJson Objects in here..."></textarea>
+        <button onclick="display()">Display</button>
+    </body>
+    <script>
+        L.Control.MousePosition = L.Control.extend({
+          options: {
+            position: 'bottomleft',
+            separator: ' : ',
+            emptyString: 'Unavailable',
+            lngFirst: false,
+            numDigits: 5,
+            lngFormatter: undefined,
+            latFormatter: undefined,
+            prefix: ""
+          },
+
+          onAdd: function (map) {
+            this._container = L.DomUtil.create('div', 'leaflet-control-mouseposition');
+            L.DomEvent.disableClickPropagation(this._container);
+            map.on('mousemove', this._onMouseMove, this);
+            this._container.innerHTML=this.options.emptyString;
+            return this._container;
+          },
+
+          onRemove: function (map) {
+            map.off('mousemove', this._onMouseMove)
+          },
+
+          _onMouseMove: function (e) {
+            var lng = this.options.lngFormatter ? this.options.lngFormatter(e.latlng.lng) : L.Util.formatNum(e.latlng.lng, this.options.numDigits);
+            var lat = this.options.latFormatter ? this.options.latFormatter(e.latlng.lat) : L.Util.formatNum(e.latlng.lat, this.options.numDigits);
+            var value = this.options.lngFirst ? lng + this.options.separator + lat : lat + this.options.separator + lng;
+            var prefixAndValue = this.options.prefix + ' ' + value;
+            this._container.innerHTML = prefixAndValue;
+          }
+
+        });
+
+        L.Map.mergeOptions({
+            positionControl: false
+        });
+
+        L.Map.addInitHook(function () {
+            if (this.options.positionControl) {
+                this.positionControl = new L.Control.MousePosition();
+                this.addControl(this.positionControl);
+            }
+        });
+
+        L.control.mousePosition = function (options) {
+            return new L.Control.MousePosition(options);
+        };
+
+        // create a map in the "map" div, set the view to a given place and zoom
+        var map = L.map('map').setView([51.505, -0.09], 4),
+            styles = {
+              LineString: {
+                color: '#ff0000',
+                weight: 5,
+                opacity: 0.8
+              },
+              Polygon: {
+                fillColor: "#ff7800",
+                color: "#ff7800",
+                weight: 1,
+                opacity: 0.8,
+                fillOpacity: 0.2
+              }
+            },
+            layers = [];
+
+        // add an OpenStreetMap tile layer
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        L.control.scale({imperial:false}).addTo(map);
+        L.control.mousePosition().addTo(map);
+
+        function clearMap(){
+            for(i in map._layers){
+                if(map._layers[i]._path != undefined)
+                {
+                    try{
+                        map.removeLayer(map._layers[i]);
+                    }
+                    catch(e){
+                        console.log("problem with " + e + map._layers[i]);
+                    }
+                }
+            }
+        }
+
+        function display () {
+          var raw = document.getElementById("geojson").value;
+
+          if (raw) {
+            clearMap();
+
+            var objects = JSON.parse(raw),
+                bbox;
+
+            objects.forEach(function iterator (object) {
+              L.geoJson(object, {
+                style: styles[object.type]
+              }).addTo(map);
+
+              if (object.bbox) bbox = expandBbox(bbox, object.bbox);
+            });
+
+            var southWest = L.latLng(bbox[1], bbox[0]),
+                northEast = L.latLng(bbox[3], bbox[2]),
+                bounds = L.latLngBounds(southWest, northEast);
+
+            map.fitBounds(bounds);
+          }
+        }
+
+        function expandBbox (bbox, values) {
+          bbox = bbox || [180.0, 90.0, -180.0, -90.0];
+
+          if (values && values.length === 4) {
+            bbox[0] = (values[0] < bbox[0] ? values[0] : bbox[0]);
+            bbox[1] = (values[1] < bbox[1] ? values[1] : bbox[1]);
+            bbox[2] = (bbox[2] < values[2] ? values[2] : bbox[2]);
+            bbox[3] = (bbox[3] < values[3] ? values[3] : bbox[3]);
+          }
+
+         return bbox;
+        }
+    </script>
+</html>
