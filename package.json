@@ -1,7 +1,7 @@
 {
   "name": "geojson.lib.routeboxer",
-  "version": "0.0.1",
-  "license": "Apache License 2.0",
+  "version": "0.0.2",
+  "license": "Apache-2.0",
   "main": "./lib/geojson.lib.routeboxer",
   "homepage": "https://github.com/luscus/geojson.lib.routeboxer",
   "author": "https://github.com/luscus/geojson.lib.routeboxer/graphs/contributors",
@@ -16,7 +16,7 @@
     "lib"
   ],
   "dependencies": {
-    "geojson.lib": "0.0.x"
+    "geojson.lib": "0.0.10"
   },
   "devDependencies": {
     "grunt": "0.4.5",
