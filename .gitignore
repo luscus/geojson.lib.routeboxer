@@ -1,5 +1,6 @@
 node_modules/
 bower_components/
+test/GeoJSONViewer.html
 .idea/
 .DS_Store
 ._.DS_Store

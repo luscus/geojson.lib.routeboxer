@@ -1,8 +1,11 @@
 var RouteBoxer = require('../lib/geojson.lib.routeboxer');
+var exec       = require('child_process').exec;
+var fs         = require('fs');
 
+var template   = fs.readFileSync(__dirname + '/GeoJSONViewer.tmpl').toString();
 
-var boxer = new RouteBoxer();
-var geojson = {
+var route1 = require('./route.json');
+var route2 = {
   "type": "LineString",
   "coordinates": [
     [100.0, 0.0],
@@ -12,11 +15,42 @@ var geojson = {
     [101.0, 1.0]
   ]};
 
-var route = require('./route.json');
+
+var path  = route1;
 
 var range = 20;
-var boxes = boxer.box(geojson, range);
+
+var boxer = new RouteBoxer();
+var boxes = boxer.box(path, range);
 
 
-boxes.push(geojson);
-console.log(JSON.stringify(boxes));
+boxes.push(path);
+boxes.push(boxer.getGrid());
+
+generateHtml(boxes);
+
+function generateHtml (geojson) {
+  var pageCode = template.replace('###LINES###', JSON.stringify(geojson));
+
+  fs.writeFileSync(__dirname + '/GeoJSONViewer.html', pageCode);
+
+  openBrowser();
+}
+
+function openBrowser () {
+  var opener;
+
+  switch (process.platform) {
+    case 'linux':
+      opener = 'xdg-open';
+      break;
+    case 'darwin':
+      opener = 'open';
+      break;
+    case 'win32':
+      opener = 'start ""';
+      break;
+  }
+
+  return exec(opener + ' "file://' + __dirname + '/GeoJSONViewer.html"');
+}

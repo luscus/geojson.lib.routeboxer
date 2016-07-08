@@ -7,7 +7,7 @@ The RouteBoxer class generates an Array of [GeoJSON.Polygon Objects](http://geoj
 
 This library builds uppon following project:
 
-- [RouteBoxer.js](http://google-maps-utility-library-v3.googlecode.com/svn/trunk/routeboxer/docs/examples.html): Calculates boxes arround a route (found at [google-maps-utility-library-v3](https://code.google.com/p/google-maps-utility-library-v3/wiki/Libraries))
+- [RouteBoxer.js](https://github.com/printercu/google-maps-utility-library-v3-read-only/blob/master/routeboxer/src/RouteBoxer.js): Calculates boxes arround a route (found at [google-maps-utility-library-v3](https://code.google.com/p/google-maps-utility-library-v3/wiki/Libraries))
 
 ## Usage
 
@@ -27,3 +27,10 @@ This library builds uppon following project:
     // range:   is the distance to the line in km
     boxes = boxer.box(geojson, range);
 
+## Test
+
+While waiting for real tests, you can play around with the `simple.js` file.
+A test route is provided and it will open the browser to visualise the whole
+processing.
+
+    node test/simple.js

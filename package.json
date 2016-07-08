@@ -1,6 +1,6 @@
 {
   "name": "geojson.lib.routeboxer",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "Apache-2.0",
   "main": "./lib/geojson.lib.routeboxer",
   "homepage": "https://github.com/luscus/geojson.lib.routeboxer",
