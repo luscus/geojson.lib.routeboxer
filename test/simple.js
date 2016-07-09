@@ -26,6 +26,8 @@ var boxes = boxer.box(path, range);
 
 boxes.push(path);
 boxes.push(boxer.getGrid());
+boxes.push(boxer.getIntersectingCells());
+
 
 generateHtml(boxes);
 
@@ -36,7 +38,6 @@ function generateHtml (geojson) {
 
   openBrowser();
 }
-
 function openBrowser () {
   var opener;
 
