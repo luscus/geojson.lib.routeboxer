@@ -23,11 +23,9 @@ var range = 20;
 var boxer = new RouteBoxer();
 var boxes = boxer.box(path, range);
 
-
+boxes.unshift(boxer.getIntersectingCells());
+boxes.unshift(boxer.getGrid());
 boxes.push(path);
-boxes.push(boxer.getGrid());
-boxes.push(boxer.getIntersectingCells());
-
 
 generateHtml(boxes);
 
