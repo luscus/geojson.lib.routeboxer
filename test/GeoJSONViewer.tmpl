@@ -103,6 +103,11 @@
         // create a map in the "map" div, set the view to a given place and zoom
         var map = L.map('map'),
             styles = {
+              Point: {
+                color: '#000000',
+                weight: 1,
+                opacity: 1
+              },
               LineString: {
                 color: '#ff0000',
                 weight: 5,
@@ -174,11 +179,13 @@
               if (object.bbox) bbox = expandBbox(bbox, object.bbox);
             });
 
-            var southWest = L.latLng(bbox[1], bbox[0]),
-                northEast = L.latLng(bbox[3], bbox[2]),
-                bounds = L.latLngBounds(southWest, northEast);
+            if (bbox) {
+                var southWest = L.latLng(bbox[1], bbox[0]),
+                    northEast = L.latLng(bbox[3], bbox[2]),
+                    bounds = L.latLngBounds(southWest, northEast);
 
-            map.fitBounds(bounds);
+                map.fitBounds(bounds);
+            }
           }
         }
 

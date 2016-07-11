@@ -9,23 +9,34 @@ var route2 = {
   "type": "LineString",
   "coordinates": [
     [100.0, 0.0],
-    [100.25, 0.5],
-    [100.73, 0.63],
-    [100.90, 0.95],
-    [101.0, 1.0]
+    [100.59, 0.11],
+    [100.19, 0.22],
+    [100.30, 0.58],
+    [100.69, 0.78],
+    [100.84, 0.41],
+    [100.80, -0.052]
+  ]};
+var route3 = {
+  "type": "LineString",
+  "coordinates": [
+    [-3.62, 1.96],
+    [2.84, 2.65],
+    [1.40, -2.65],
+    [-2.84, -3.36],
+    [-4.09, 1.09]
   ]};
 
 
-var path  = route1;
+var path  = route2;
 
 var range = 20;
-
 var boxer = new RouteBoxer();
 var boxes = boxer.box(path, range);
 
 boxes.unshift(boxer.getIntersectingCells());
 boxes.unshift(boxer.getGrid());
 boxes.push(path);
+boxes.push(boxer.getIntersectionPoints());
 
 generateHtml(boxes);
 
