@@ -16,7 +16,7 @@
     "lib"
   ],
   "dependencies": {
-    "geojson.lib": "^0.0.12"
+    "geojson.lib": "^0.0.13"
   },
   "devDependencies": {
     "grunt": "1.0.1",
