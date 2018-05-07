@@ -23,7 +23,7 @@
     "grunt-contrib-clean": "1.0.0",
     "grunt-contrib-jshint": "1.1.0",
     "grunt-mocha-test": "0.13.2",
-    "load-grunt-tasks": "3.5.2",
+    "load-grunt-tasks": "4.0.0",
     "chai": "3.5.0",
     "mocha": "3.2.0",
     "geojson-assert": "0.0.2"
